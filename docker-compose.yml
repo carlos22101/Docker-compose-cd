@@ -1,27 +1,17 @@
-version: "3.8"
-
-services:
-  frontend_carlos:
-    build: ./frontend
-    container_name: frontend_carlos
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    depends_on:
-      - backend_solis
-    networks:
-      - carlos_net
-
   backend_solis:
     build: ./backend
     container_name: backend_solis
     restart: unless-stopped
+    env_file:
+      - ./.env
     environment:
-      - DB_HOST=db_carlos
-      - DB_PORT=3306
-      - DB_USER=carlos
-      - DB_PASSWORD=1234
-      - DB_NAME=carlos_DB
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    volumes:
+      - ./backend/.env:/app/.env:ro   # opcional, monta el archivo si tu app busca el archivo .env
     ports:
       - "8000:8000"
     depends_on:
@@ -29,27 +19,17 @@ services:
     networks:
       - carlos_net
 
-  db_carlos:
-    image: mysql:8.0
-    container_name: db_carlos
+  frontend_carlos:
+    build: ./frontend
+    container_name: frontend_carlos
     restart: unless-stopped
+    env_file:
+      - ./.env
     environment:
-      MYSQL_ROOT_PASSWORD: RootStrongPassw0rd!
-      MYSQL_DATABASE: carlos_DB
-      MYSQL_USER: carlos
-      MYSQL_PASSWORD: 1234
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - API_BASE=${API_BASE}
     ports:
-      - "3306:3306"
+      - "80:80"
+    depends_on:
+      - backend_solis
     networks:
       - carlos_net
-
-networks:
-  carlos_net:
-    driver: bridge
-
-volumes:
-  db_data:
-    driver: local
