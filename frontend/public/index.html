@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CRUD Usuarios - Carlos Solis</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>CRUD de Usuarios — Carlos Solis</h1>
+  </header>
+
+  <section id="form-section">
+    <h2>Crear / Editar Usuario</h2>
+    <form id="userForm">
+      <input type="hidden" id="userId" />
+      <label>Nombre <input id="firstName" required /></label>
+      <label>Apellido <input id="lastName" required /></label>
+      <label>Email <input id="email" type="email" /></label>
+      <button type="submit">Guardar</button>
+      <button type="button" id="cancelEdit">Cancelar</button>
+    </form>
+  </section>
+
+  <section id="list-section">
+    <h2>Lista de Usuarios</h2>
+    <table id="usersTable">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Email</th><th>Acciones</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script src="/app.js"></script>
+</body>
+</html>
