@@ -1,4 +1,4 @@
-const API_BASE = process.env.API_BASE ;
+const API_BASE = "http://34.204.46.88:8000" ;
 
 async function fetchUsers() {
   const res = await fetch(`${API_BASE}/users`);

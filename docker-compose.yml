@@ -1,39 +1,27 @@
-# docker-compose.yml (reemplazar todo el archivo por este contenido)
-# Nota: no usamos la clave `version:` para evitar la advertencia.
+version: "3.8"
 
 services:
   frontend_carlos:
     build: ./frontend
     container_name: frontend_carlos
     restart: unless-stopped
-    env_file:
-      - ./.env
-    environment:
-      - FRONTEND_API_URL=${FRONTEND_API_URL}
     ports:
       - "80:80"
     depends_on:
       - backend_solis
     networks:
       - carlos_net
-    # si quieres montar el .env físicamente en el contenedor (opcional)
-    # volumes:
-    #   - ./.env:/usr/src/app/.env:ro
 
   backend_solis:
     build: ./backend
     container_name: backend_solis
     restart: unless-stopped
-    env_file:
-      - ./.env
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-    volumes:
-      - ./backend/.env:/app/.env:ro   # opcional, útil si tu app busca archivo .env en disco
+      - DB_HOST=db_carlos
+      - DB_PORT=3306
+      - DB_USER=carlos
+      - DB_PASSWORD=1234
+      - DB_NAME=carlos_DB
     ports:
       - "8000:8000"
     depends_on:
@@ -49,7 +37,7 @@ services:
       MYSQL_ROOT_PASSWORD: RootStrongPassw0rd!
       MYSQL_DATABASE: carlos_DB
       MYSQL_USER: carlos
-      MYSQL_PASSWORD: "1234"
+      MYSQL_PASSWORD: 1234
     volumes:
       - db_data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -57,12 +45,6 @@ services:
       - "3306:3306"
     networks:
       - carlos_net
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
 
 networks:
   carlos_net:
